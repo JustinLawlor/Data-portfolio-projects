@@ -1,3 +1,6 @@
+-- Revised Oct 2026: fixed the PropertySplitAddress SUBSTRING start position, trimmed the leading space
+-- from PropertySplitCity, and removed an ORDER BY that SQL Server does not allow after DELETE.
+
 --Cleaning Data in SQL queries
 Select *
 From PortfolioProject1.dbo.NashvilleHousing
@@ -55,13 +58,13 @@ From PortfolioProject1.dbo.NashvilleHousing
  Add PropertySplitAddress Nvarchar(255); 
  
     Update NashvilleHousing
- SET PropertySplitAddress = SUBSTRING(PropertyAddress, CHARINDEX(',', PropertyAddress) - 1 , LEN(PropertyAddress))
+ SET PropertySplitAddress = SUBSTRING(PropertyAddress, 1, CHARINDEX(',', PropertyAddress) - 1)
 
   ALTER TABLE NashvilleHousing
  Add PropertySplitcity nvarchar(255); 
 
    Update NashvilleHousing
- SET PropertySplitCity = SUBSTRING(PropertyAddress, CHARINDEX(',', PropertyAddress) + 1 , LEN(PropertyAddress))
+ SET PropertySplitCity = LTRIM(SUBSTRING(PropertyAddress, CHARINDEX(',', PropertyAddress) + 1 , LEN(PropertyAddress)))
 
  Select *
  From PortfolioProject1.dbo.NashvilleHousing
@@ -134,7 +137,6 @@ Select *,
 Delete
 From Row_numCTE
  Where row_num > 1
- Order by PropertyAddress
  
 
 
